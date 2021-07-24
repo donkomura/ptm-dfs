@@ -1,0 +1,8 @@
+project(ptm-dfs CXX)
+set(CMAKE_CXX_FLAGS -std=c++14 -Wall)
+
+find_package(PkgConfig)
+
+pkg_check_modules(Boost REQUIRED)
+
+add_executable(main main.cpp)
