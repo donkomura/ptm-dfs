@@ -3,10 +3,13 @@
 #include <thread>
 #include <thallium.hpp>
 #include <boost/program_options.hpp>
+#include <quill/Quill.h>
 
 #define PMEMPOOL "/tmp/ptm.db"
 #define DB_SIZE 256*1024*1024
 #define NTHREAD 1
+#define LOGLEVEL "Info"
+#define LOGFILE "ptmdb_dfs.log"
 
 #define FAIL(fmt, ...)			\
 do {			\
@@ -21,7 +24,7 @@ do {			\
 } while (0);
 
 struct options {
-	std::string pool_path;
+	std::string pool_path, log_level, log_file;
 	size_t db_size, nthread;
 } ops;
 
@@ -32,6 +35,8 @@ set_options(boost::program_options::variables_map vm)
 		ops.pool_path = vm["pool"].as<std::string>();
 		ops.db_size = vm["db_size"].as<size_t>();
 		ops.nthread = vm["thread"].as<size_t>();
+		ops.log_level = vm["log_level"].as<std::string>();
+		ops.log_file = vm["log_file"].as<std::string>();
 	} catch(const boost::bad_any_cast& e) {
 		std::cout << e.what() << std::endl;
 		return 1;
@@ -54,9 +59,8 @@ main(int argc, char **argv)
 {
 	static sigset_t sigset;
 	pthread_t pt;
-	thallium::managed<thallium::pool> abtpool = 
-		thallium::pool::create(thallium::pool::access::spmc);
-
+	std::string address;
+	quill::Logger* logger;
 	int rc;
 
 	/* options */
@@ -69,12 +73,18 @@ main(int argc, char **argv)
 		("pool,p", value<std::string>()->default_value(PMEMPOOL), "pmem pool path")
 		("db_size,s", value<size_t>()->default_value(DB_SIZE), "db size for ptmdb")
 		("thread,t", value<size_t>()->default_value(NTHREAD), "thread count")
+		("log_level,l", value<std::string>()->default_value(LOGLEVEL), 
+			 "logging level [Debug, Info, Warning, Error, Critical]")
+		("log_file,L", value<std::string>()->default_value(LOGFILE),
+			 "logging to file")
+		("debug,d", "log output to console")
 		;
 
 	try {
 		store(parse_command_line(argc, argv, description), vm);
 	} catch (const error_with_option_name& e) {
 		std::cout << e.what() << std::endl;
+		exit(1);
 	}
 	notify(vm);
 
@@ -98,8 +108,21 @@ main(int argc, char **argv)
 	pthread_create(&pt, NULL, handle_sig, &sigset);
 	pthread_detach(pt);
 
+	/* setup logger */
+	quill::start();
+	if (vm.count("debug")) {
+		quill::Handler* stdout_handle = quill::stdout_handler("stdout_main");
+		stdout_handle->set_log_level(quill::from_string(ops.log_level));
+		logger = quill::create_logger("logger", stdout_handle);
+	} else {
+		quill::Handler* file_handle = quill::file_handler(ops.log_file, "w");
+		file_handle->set_log_level(quill::from_string(ops.log_level));
+		logger = quill::create_logger("logger", file_handle);
+	}
+
 	thallium::engine engine("tcp", THALLIUM_SERVER_MODE, 1, ops.nthread);
-	std::cout << "server starts at address " << engine.self() << std::endl;
+	address = engine.self();
+	LOG_INFO(logger, "server status at address {}", address);
 	engine.enable_remote_shutdown();
 	engine.wait_for_finalize();
 }
