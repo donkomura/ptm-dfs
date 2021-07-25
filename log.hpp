@@ -1,0 +1,1 @@
+static quill::Logger* logger;

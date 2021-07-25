@@ -6,6 +6,7 @@
 #include <boost/program_options.hpp>
 #include <quill/Quill.h>
 #include "rpc.hpp"
+#include "log.hpp"
 
 #define PMEMPOOL "/tmp/ptm.db"
 #define DB_SIZE 256*1024*1024
@@ -62,7 +63,6 @@ main(int argc, char **argv)
 	static sigset_t sigset;
 	pthread_t pt;
 	std::string address;
-	quill::Logger* logger;
 	int rc;
 
 	/* options */
