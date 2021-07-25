@@ -2,8 +2,10 @@
 #include <csignal>
 #include <thread>
 #include <thallium.hpp>
+#include <thallium/serialization/stl/string.hpp>
 #include <boost/program_options.hpp>
 #include <quill/Quill.h>
+#include "rpc.hpp"
 
 #define PMEMPOOL "/tmp/ptm.db"
 #define DB_SIZE 256*1024*1024
@@ -96,7 +98,7 @@ main(int argc, char **argv)
 	rc = set_options(vm);
 	ASSERT(rc == 0, "set_options failed");
 
-	/* 
+	/**
 	 * sigwait thread prepare
 	 * we use pthread only for singnal handle 
 	 * about mix std::thread/pthread, see https://stackoverflow.com/a/54871996
@@ -123,6 +125,11 @@ main(int argc, char **argv)
 	thallium::engine engine("tcp", THALLIUM_SERVER_MODE, 1, ops.nthread);
 	address = engine.self();
 	LOG_INFO(logger, "server status at address {}", address);
+
+	engine.define("fs_write", fs_write);
+	engine.define("fs_read", fs_read);
+
+	/* finalize thallium */
 	engine.enable_remote_shutdown();
 	engine.wait_for_finalize();
 }
