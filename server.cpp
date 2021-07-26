@@ -130,8 +130,8 @@ main(int argc, char **argv)
 
 	kv_init(ops.pool_path, ops.db_size);
 
-	engine.define("fs_write", rpc_kv_write);
-	engine.define("fs_read", rpc_kv_read);
+	engine.define("rpc_kv_write", rpc_kv_write);
+	engine.define("rpc_kv_read", rpc_kv_read);
 
 	/* finalize thallium */
 	engine.enable_remote_shutdown();

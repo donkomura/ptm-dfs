@@ -16,4 +16,6 @@ rpc_kv_write(const thallium::request& req, const std::string& key, const std::st
 void
 rpc_kv_read(const thallium::request& req, const std::string& key, size_t& value_size);
 
+void
+rpc_kv_remove(const thallium::request& req, const std::string& key);
 #endif // _RPC_H_
