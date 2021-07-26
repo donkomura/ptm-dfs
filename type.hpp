@@ -1,4 +1,5 @@
-#include <thallium/serialization/stl/string.hpp>
+#ifndef _TYPE_H_
+#define _TYPE_H_
 
 template <typename T>
 class fs_read_result {
@@ -28,3 +29,4 @@ class fs_read_result {
 		T _data;
 };
 
+#endif // _TYPE_H_
