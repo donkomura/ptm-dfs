@@ -64,6 +64,7 @@ endif()
 
 pkg_check_modules(thallium thallium REQUIRED)
 
+# global includes
 include_directories(${thallium_INCLUDE_DIRS})
 include_directories(${quill_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
@@ -71,11 +72,29 @@ include_directories(${INCLUDE_PTMDB_DIR})
 include_directories(${INCLUDE_PTMDB_PORT_DIR})
 include_directories(${INCLUDE_PTMDB_UTIL_DIR})
 
+# server
 add_executable(${EXEC_SERVER} ${SRC_PTMS_DB} ${SRC_RPC} ${SRC_KV} ${SRC_SERVER} ${SRC_PTMS})
-# add_executable(${EXEC_SERVER} ${SRC_SERVER} ${SRC_PTMS})
 target_link_libraries(${EXEC_SERVER} ${thallium_LIBRARIES})
 target_link_libraries(${EXEC_SERVER} ${Boost_LIBRARIES})
 target_link_libraries(${EXEC_SERVER} quill::quill)
 
+# client
 add_executable(${EXEC_CLIENT} ${SRC_CLIENT})
 target_link_libraries(${EXEC_CLIENT} ${thallium_LIBRARIES})
+
+# client mpi
+if (USE_MPI)
+	set(SRC_CLIENT_MPI client_mpi.cpp)
+	set(EXEC_CLIENT_MPI client_mpi)
+	set(Boost_USE_STATIC_LIBS OFF)
+	set(Boost_USE_MULTITHREADED ON)
+	set(Boost_USE_STATIC_RUNTIME OFF)
+	add_executable(${EXEC_CLIENT_MPI} ${SRC_CLIENT_MPI})
+	find_package(MPI REQUIRED)
+	find_package(Boost 1.53.0 REQUIRED COMPONENTS mpi serialization)
+	target_include_directories(${EXEC_CLIENT_MPI} PUBLIC ${MPI_CXX_INCLUDE_PATH})
+	target_link_libraries(${EXEC_CLIENT_MPI} ${Boost_LIBRARIES})
+	target_link_libraries(${EXEC_CLIENT_MPI} ${MPI_CXX_LIBRARIES})
+	target_link_libraries(${EXEC_CLIENT_MPI} ${thallium_LIBRARIES})
+endif()
+
