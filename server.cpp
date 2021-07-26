@@ -7,6 +7,7 @@
 #include <quill/Quill.h>
 #include "rpc.hpp"
 #include "log.hpp"
+#include "kv.hpp"
 
 #define PMEMPOOL "/tmp/ptm.db"
 #define DB_SIZE 256*1024*1024
@@ -54,6 +55,7 @@ handle_sig(void *arg)
 	int sig;
 
 	sigwait(s, &sig);
+	kv_term();
 	exit(1);
 }
 
@@ -126,8 +128,10 @@ main(int argc, char **argv)
 	address = engine.self();
 	LOG_INFO(logger, "server status at address {}", address);
 
-	engine.define("fs_write", fs_write);
-	engine.define("fs_read", fs_read);
+	kv_init(ops.pool_path, ops.db_size);
+
+	engine.define("fs_write", rpc_kv_write);
+	engine.define("fs_read", rpc_kv_read);
 
 	/* finalize thallium */
 	engine.enable_remote_shutdown();

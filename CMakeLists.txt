@@ -71,7 +71,7 @@ include_directories(${INCLUDE_PTMDB_DIR})
 include_directories(${INCLUDE_PTMDB_PORT_DIR})
 include_directories(${INCLUDE_PTMDB_UTIL_DIR})
 
-add_executable(${EXEC_SERVER} ${SRC_PTMS_DB} ${SRC_SERVER} ${SRC_RPC} ${SRC_KV} ${SRC_PTMS})
+add_executable(${EXEC_SERVER} ${SRC_PTMS_DB} ${SRC_RPC} ${SRC_KV} ${SRC_SERVER} ${SRC_PTMS})
 # add_executable(${EXEC_SERVER} ${SRC_SERVER} ${SRC_PTMS})
 target_link_libraries(${EXEC_SERVER} ${thallium_LIBRARIES})
 target_link_libraries(${EXEC_SERVER} ${Boost_LIBRARIES})

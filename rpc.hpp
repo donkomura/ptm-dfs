@@ -11,10 +11,9 @@ using rpc_return_t = int;
 #define RPC_UNKNOWN		(RPC_CODE(10))
 
 void
-fs_write(const thallium::request& req, const std::string& key, const size_t key_size,
-		const std::string& value, const size_t value_size);
+rpc_kv_write(const thallium::request& req, const std::string& key, const std::string& value);
 
 void
-fs_read(const thallium::request& req, const std::string& key, const size_t key_size);
+rpc_kv_read(const thallium::request& req, const std::string& key, size_t& value_size);
 
 #endif
