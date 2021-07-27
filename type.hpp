@@ -5,13 +5,13 @@
 #include "kv_err.hpp"
 #include "rpc.hpp"
 
-class fs_write_result {
+class kv_write_result {
 	public:
-		fs_write_result() = default;
-		fs_write_result(fs_write_result&&) = default;
-		fs_write_result(const fs_write_result&) = default;
-		fs_write_result& operator=(fs_write_result&&) = default;
-		fs_write_result& operator=(const fs_write_result&) = default;
+		kv_write_result() = default;
+		kv_write_result(kv_write_result&&) = default;
+		kv_write_result(const kv_write_result&) = default;
+		kv_write_result& operator=(kv_write_result&&) = default;
+		kv_write_result& operator=(const kv_write_result&) = default;
 
 		template <typename A>
 		void serialize(A& a)
@@ -27,13 +27,13 @@ class fs_write_result {
 };
 
 template <typename T>
-class fs_read_result {
+class kv_read_result {
 	public:
-		fs_read_result() = default;
-		fs_read_result(fs_read_result&&) = default;
-		fs_read_result(const fs_read_result&) = default;
-		fs_read_result& operator=(fs_read_result&&) = default;
-		fs_read_result& operator=(const fs_read_result&) = default;
+		kv_read_result() = default;
+		kv_read_result(kv_read_result&&) = default;
+		kv_read_result(const kv_read_result&) = default;
+		kv_read_result& operator=(kv_read_result&&) = default;
+		kv_read_result& operator=(const kv_read_result&) = default;
 
 		template <typename A>
 		void serialize(A& a)
@@ -52,7 +52,7 @@ class fs_read_result {
 		kv_status 	_err = KV_SUCCESS;
 };
 
-class fs_remove_result : public fs_write_result {
+class kv_remove_result : public kv_write_result {
 	private:
 		kv_status _err = KV_SUCCESS;
 };

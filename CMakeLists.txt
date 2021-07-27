@@ -15,7 +15,7 @@ set(SRC_SERVER server.cpp)
 set(SRC_CLIENT client.cpp)
 
 # package finding
-set(CMAKE_PREFIX_PATH /home/obata/pkg/)
+set(CMAKE_PREFIX_PATH ENV{PKG_LOCAL_ROOT})
 find_package(PkgConfig REQUIRED)
 find_package(Boost 1.53.0 REQUIRED COMPONENTS program_options)
 find_package(quill REQUIRED)

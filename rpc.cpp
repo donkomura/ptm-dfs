@@ -13,7 +13,7 @@ std::shared_timed_mutex grwlock {};
 void
 rpc_kv_write(const thallium::request& req, const std::string& key, const std::string& value)
 {
-	fs_write_result res;
+	kv_write_result res;
 	kv_status s;
 	auto l = get_logger();
 	std::string diag = "rpc_kv_write";
@@ -30,7 +30,7 @@ rpc_kv_write(const thallium::request& req, const std::string& key, const std::st
 void
 rpc_kv_read(const thallium::request& req, const std::string& key, size_t& value_size)
 {
-	fs_read_result<std::string> res;
+	kv_read_result<std::string> res;
 	std::string value = std::string(value_size, '.');
 	kv_status s;
 	auto l = get_logger();
@@ -49,7 +49,7 @@ rpc_kv_read(const thallium::request& req, const std::string& key, size_t& value_
 void
 rpc_remove(const thallium::request& req, const std::string& key)
 {
-	fs_remove_result res;
+	kv_remove_result res;
 	kv_status s;
 	auto l = get_logger();
 	std::string diag = "rpc_kv_remove";
