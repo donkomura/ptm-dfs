@@ -24,7 +24,7 @@ main(int argc, char **argv)
 
 	std::string buf = std::string(value.size(), '_');
 	size_t buf_size = buf.size();
-	fs_read_result<std::string> read_val = 
+	kv_read_result<std::string> read_val = 
 		rpc_kv_read.on(server)(key, buf_size);
 	std::cout << "rpc_kv_read: ret="
 		<< std::string(read_val.data().begin(), read_val.data().end())

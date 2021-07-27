@@ -30,12 +30,12 @@ main(int argc, char **argv)
 
 	std::string key = "key_" + std::to_string(world.rank()),
 		value = "value_" + std::to_string(world.rank());
-	fs_write_result ret = rpc_kv_write.on(server)(key, value);
+	kv_write_result ret = rpc_kv_write.on(server)(key, value);
 	std::cout << "rpc_kv_write:ret=" << ret.err() << std::endl;
 
 	std::string buf = std::string(value.size(), '_');
 	size_t buf_size = buf.size();
-	fs_read_result<std::string> read_val = 
+	kv_read_result<std::string> read_val = 
 		rpc_kv_read.on(server)(key, buf_size);
 	std::cout << "rpc_kv_read: key=" << key << ",value="
 		<< std::string(read_val.data().begin(), read_val.data().end())
