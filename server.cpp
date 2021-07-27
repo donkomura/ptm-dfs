@@ -113,6 +113,7 @@ main(int argc, char **argv)
 	pthread_detach(pt);
 
 	/* setup logger */
+	quill::Logger* logger;
 	quill::start();
 	if (vm.count("debug")) {
 		quill::Handler* stdout_handle = quill::stdout_handler("stdout_main");
