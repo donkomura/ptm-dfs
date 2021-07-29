@@ -15,7 +15,7 @@ set(SRC_SERVER server.cpp)
 set(SRC_CLIENT client.cpp)
 
 # package finding
-set(CMAKE_PREFIX_PATH ENV{PKG_LOCAL_ROOT})
+set(CMAKE_PREFIX_PATH $ENV{PKG_LOCAL_ROOT})
 find_package(PkgConfig REQUIRED)
 find_package(Boost 1.53.0 REQUIRED COMPONENTS program_options)
 find_package(quill REQUIRED)
@@ -26,6 +26,8 @@ set(INCLUDE_PTMDB_DIR ${PTMDB_ROOT})
 set(INCLUDE_PTMDB_PORT_DIR ${PTMDB_ROOT}/port)
 set(INCLUDE_PTMDB_UTIL_DIR ${PTMDB_ROOT}/util)
 set(SRC_PTMS ${PTMDB_ROOT}/db_impl.cc ${PTMDB_ROOT}/status.cc ${PTMDB_ROOT}/port/port_posix.cc ${PTMDB_ROOT}/util/histogram.cc ${PTMDB_ROOT}/util/env_posix.cc ${PTMDB_ROOT}/util/testutil.cc ${PTMDB_ROOT}/write_batch.cc)
+# ptmdb path
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPM_FILE_NAME=${PM_FILE_NAME}")
 ## for pmem ops
 option(USE_PWB_IS_CLFLUSH "pwd is a CLFLUSH and pfence/psync is nops (default)" OFF)
 option(USE_PWB_IS_CLFLUSHOPT "pwd is a CLFLUSHOPT and pfence/psync are SFENCE" OFF)
